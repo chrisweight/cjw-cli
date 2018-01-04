@@ -13,7 +13,8 @@
   "keywords": [
     "poc",
     "cli",
-    "seed"
+    "seed",
+    "generator"
   ],
   "author": "Chris Weight",
   "license": "MIT",
@@ -22,9 +23,11 @@
   },
   "homepage": "https://github.com/chrisweight/cjw-cli#readme",
   "bin": {
-    "clone": "bin/clone.js"
+    "cw": "bin/index.js"
   },
   "dependencies": {
-    "shelljs": "0.7.8"
-  }
+    "shelljs": "0.7.8",
+    "yargs": "10.0.3"
+  },
+  "devDependencies": {}
 }
