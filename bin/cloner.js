@@ -25,6 +25,8 @@ exports.Cloner = class {
         shell.exec(`git clone --depth=1 ${repo} ${projectName}`)
         shell.cd(projectName)
         shell.rm('-rf', '.git')
+        shell.echo('About to try and install seed dependencies...')
+        shell.exec('npm i')
 
         if (!!remoteUrl) {
             this.reinit(remoteUrl)
@@ -45,7 +47,7 @@ exports.Cloner = class {
 
         shell.echo(`Valid new remote URL detected: ${remoteUrl} - adding...`)
         shell.exec(`git remote add origin ${remoteUrl}`)
-        
+
         shell.echo('Done!')
     }
 }
