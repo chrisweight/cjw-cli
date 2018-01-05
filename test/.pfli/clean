@@ -1,0 +1,16 @@
+#!/usr/bin/env python
+# -*- coding: UTF-8 -*-
+"""Delete all build artifacts."""
+
+from os import getcwd
+from _utils import show_error
+
+array = [1, 2, 3, 0, 4, 5]
+cwd = getcwd()
+
+def main():
+    for i in array:
+        print "hello {0} from {1}".format(i, cwd)
+
+if __name__ == '__main__':
+    main()

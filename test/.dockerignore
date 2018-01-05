@@ -1,0 +1,10 @@
+.git/
+.vscode/
+@docs/
+node_modules/
+
+*.md
+.dockerignore
+.DS_Store
+docker-compose.yml
+Dockerfile
