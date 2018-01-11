@@ -1,5 +1,9 @@
 const fs = require('fs')
 
+RegExp.escape = function (s) {
+    return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+};
+
 const keys = {
     name: '${projectName}',
     description: '${projectDescription}',
@@ -7,21 +11,18 @@ const keys = {
     repo: '{$projectRepoUrl}'
 }
 
+// this presumes directory has been set appropriately, could definitely
+// be improved!
 const fileList = [
-    'config.xml',
-    'ionic.config.json',
-    'package.json',
+    './config.xml',
+    './ionic.config.json',
+    './package.json',
     './src/index.html'
 ]
 
 exports.Setup = class {
 
-    constructor() {
-
-    }
-
     replaceValuesInFile(file, searchValueMap, replaceValueMap) {
-        console.log('Setup.replaceValuesInFile: ', file)
 
         return new Promise((resolve, reject) => {
 
@@ -31,8 +32,8 @@ exports.Setup = class {
                 }
 
                 // 1. Break the values out to two arrays
-                let _sv = Object.values(searchValueMap)
-                let _rv = Object.values(replaceValueMap)
+                const _sv = Object.values(searchValueMap)
+                const _rv = Object.values(replaceValueMap)
 
                 // 2. Combine to a single key-value map, 
                 // we also keep a separate escaped regex array so we can still lookup with the unescaped value
@@ -71,34 +72,18 @@ exports.Setup = class {
     }
 
     setProjectValues(name, description, identifier, repo) {
-        console.log(`Setup.setProjectValues(${name}, ${description}, ${identifier}, ${repo})`)
+        console.log('Setup.setProjectValues()', name, description, identifier, repo)
 
-        if (this.isUpdating === true) {
-            throw ('already running, aborting!')
-        }
-
-        this.isUpdating = true
-
-        this.replacements = {
+        let _replacements = {
             name: name,
             description: description,
             identifier: identifier,
-            repo: repo
+            repo: repo || 'SET ME'
         }
 
-        const actions = fileList.map(file => {
-            return replaceValuesInFile(file, keys, replacements)
-        })
+        const actions = fileList
+            .map(file => this.replaceValuesInFile(file, keys, _replacements))
 
-        return Promise
-            .all(actions)
-            .then(result => {
-                this.isUpdating = false
-                return result
-            })
-            .catch(error => {
-                this.isUpdating = false
-                return error
-            })
+        return Promise.all(actions)
     }
 }
