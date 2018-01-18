@@ -1,24 +1,27 @@
 const fs = require('fs')
 
 RegExp.escape = function (s) {
-    return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-};
-
-const keys = {
-    name: '${projectName}',
-    description: '${projectDescription}',
-    identifier: '${appIdentifier}',
-    repo: '{$projectRepoUrl}'
+    return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
 }
 
-// this presumes directory has been set appropriately, could definitely
-// be improved!
-const fileList = [
-    './config.xml',
-    './ionic.config.json',
-    './package.json',
-    './src/index.html'
-]
+const CONFIG_URL = './cw.config.json'
+
+let DEFAULTS = {
+    keys: {
+        name: '${projectName}',
+        description: '${projectDescription}',
+        identifier: '${appIdentifier}',
+        repo: '{$projectRepoUrl}'
+    },
+    fileList: [
+        './config.xml',
+        './ionic.config.json',
+        './package.json',
+        './package-lock.json',
+        './src/index.html'
+    ]
+}
+
 
 exports.Setup = class {
 
@@ -50,7 +53,9 @@ exports.Setup = class {
 
                 let result = data.replace(re, matched => {
                     const _replacement = _mapped[matched]
+
                     console.log('Matched: ', matched, _replacement)
+
                     return _replacement
                 })
 
@@ -71,6 +76,37 @@ exports.Setup = class {
         })
     }
 
+    loadConfig() {
+        console.log('Setup.loadConfig()')
+
+        return new Promise((resolve, reject) => {
+            fs.readFile(CONFIG_URL, 'utf8', (err, data) => {
+                let _defaults = {
+                    ...DEFAULTS
+                }
+
+                if (!!err) {
+                    console.error(err)
+                    return resolve(_defaults)
+                }
+
+                try {
+                    console.log('Config file loaded, attempting to parse and apply...')
+
+                    let _loaded = JSON.parse(data)
+
+                    return resolve({
+                        ...DEFAULTS,
+                        _loaded
+                    })
+                } catch (error) {
+                    console.error(error)
+                    return resolve(_defaults)
+                }
+            })
+        })
+    }
+
     setProjectValues(name, description, identifier, repo) {
         console.log('Setup.setProjectValues()', name, description, identifier, repo)
 
@@ -81,9 +117,14 @@ exports.Setup = class {
             repo: repo || 'SET ME'
         }
 
-        const actions = fileList
-            .map(file => this.replaceValuesInFile(file, keys, _replacements))
+        return this
+            .loadConfig()
+            .then(config => {
+                const actions = config.fileList
+                    .map(file => this.replaceValuesInFile(file, config.keys, _replacements))
 
-        return Promise.all(actions)
+                return Promise.all(actions)
+            })
+            .catch(error => console.error(error))
     }
 }

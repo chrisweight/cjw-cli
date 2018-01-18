@@ -6,14 +6,14 @@ exports.Cloner = class {
     constructor() {
         if (!shell.which(`git`)) {
             shell.echo(`This tool requires git, please install and try again!`)
-            shell.exit(1);
+            shell.exit(1)
         }
     }
 
 
     _isGitUrl(url) {
-        var regex = /(?:git|ssh|https?|git@[-\w.]+):(\/\/)?(.*?)(\.git)(\/?|\#[-\d\w._]+?)$/;
-        return regex.test(url);
+        var regex = /(?:git|ssh|https?|git@[-\w.]+):(\/\/)?(.*?)(\.git)(\/?|\#[-\d\w._]+?)$/
+        return regex.test(url)
     }
 
 
@@ -58,6 +58,10 @@ exports.Cloner = class {
     installDeps() {
         shell.echo(`About to try and install seed dependencies...`)
         shell.exec(`npm i`)
+    }
+
+    cleanup() {
+        const shell = require('shelljs')
     }
 }
 

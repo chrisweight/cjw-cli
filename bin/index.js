@@ -1,8 +1,8 @@
 #! /usr/bin/env node
 
-const shell = require('shelljs')
-const yargs = require('yargs')
-const inquirer = require('inquirer')
+const shell     = require('shelljs')
+const yargs     = require('yargs')
+const inquirer  = require('inquirer')
 
 const {
     Cloner
@@ -11,10 +11,10 @@ const {
     Setup
 } = require('./setup')
 
-const repo = `git@github.com:chrisweight/cjw-ionic-seed.git`
+const repo      = `git@github.com:chrisweight/cjw-ionic-seed.git`
 
-const cloner = new Cloner()
-const setup = new Setup()
+const cloner    = new Cloner()
+const setup     = new Setup()
 
 const questions = [{
         type: 'input',
@@ -45,15 +45,9 @@ const questions = [{
         message: 'Enter your project repo remote Url',
         default: 'git@github.com:chrisweight/new-project.git',
         when: answers => answers.hasRepo,
-        validate: (value) => {
-            const _valid = cloner._isGitUrl(value)
-
-            if (_valid) {
-                return true
-            }
-
-            return 'Please enter a valid Git URL'
-        }
+        validate: (value) => cloner._isGitUrl(value) 
+            ? true
+            : 'Please enter a valid Git URL'
     }
 ]
 
