@@ -95,6 +95,8 @@ exports.Setup = class {
 
                     let _loaded = JSON.parse(data)
 
+                    console.dir(_loaded)
+
                     return resolve({
                         ...DEFAULTS,
                         _loaded
