@@ -1,8 +1,8 @@
 #! /usr/bin/env node
 
-const shell     = require('shelljs')
-const yargs     = require('yargs')
-const inquirer  = require('inquirer')
+const shell = require('shelljs')
+const yargs = require('yargs')
+const inquirer = require('inquirer')
 
 const {
     Cloner
@@ -11,10 +11,27 @@ const {
     Setup
 } = require('./setup')
 
-const repo      = `git@github.com:chrisweight/cjw-ionic-seed.git`
+const DEFAULT_REPO = `git@github.com:chrisweight/cjw-ionic-seed.git`
 
-const cloner    = new Cloner()
-const setup     = new Setup()
+const cloner = new Cloner()
+const setup = new Setup()
+
+let repo = DEFAULT_REPO;
+
+// Remove the first two default args added by process.
+process.argv.splice(0, 2);
+
+const _seedUrl = process.argv[0]
+
+if (!!_seedUrl && cloner._isGitUrl(_seedUrl)) {
+    repo = _seedUrl
+} 
+
+console.log(`Using ${repo} as seed...`)
+
+
+// -- 
+
 
 const questions = [{
         type: 'input',
@@ -45,11 +62,12 @@ const questions = [{
         message: 'Enter your project repo remote Url',
         default: 'git@github.com:chrisweight/new-project.git',
         when: answers => answers.hasRepo,
-        validate: (value) => cloner._isGitUrl(value) 
-            ? true
-            : 'Please enter a valid Git URL'
+        validate: (value) => cloner._isGitUrl(value) ?
+            true : 'Please enter a valid Git URL'
     }
 ]
+
+// --
 
 inquirer
     .prompt(questions)
@@ -62,9 +80,7 @@ inquirer
                 answers.appIdentifier,
                 answers.repoUrl
             )
-            .then(result => {
-                cloner.installDeps()
-            })
+            .then(result => cloner.installDeps())
             .catch(error => console.error(error))
     })
     .catch(error => console.error(error))

@@ -1,4 +1,5 @@
-const fs = require('fs')
+const fs    = require('fs')
+const shell = require('shelljs')
 
 RegExp.escape = function (s) {
     return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
@@ -24,7 +25,6 @@ let DEFAULTS = {
 
 
 exports.Setup = class {
-
     replaceValuesInFile(file, searchValueMap, replaceValueMap) {
 
         return new Promise((resolve, reject) => {
@@ -40,7 +40,7 @@ exports.Setup = class {
 
                 // 2. Combine to a single key-value map, 
                 // we also keep a separate escaped regex array so we can still lookup with the unescaped value
-                let _mapped = {}
+                let _mapped  = {}
                 let _escaped = []
 
                 _sv.forEach((value, index) => {
@@ -49,15 +49,8 @@ exports.Setup = class {
                 })
 
                 // 3. Create the regex from the escaped characters
-                const re = new RegExp(_escaped.join("|"), 'g')
-
-                let result = data.replace(re, matched => {
-                    const _replacement = _mapped[matched]
-
-                    console.log('Matched: ', matched, _replacement)
-
-                    return _replacement
-                })
+                const re    = new RegExp(_escaped.join("|"), 'g')
+                let result  = data.replace(re, matched => _mapped[matched])
 
                 // 4. No changes, so just return back here
                 if (result === data) {
@@ -77,8 +70,6 @@ exports.Setup = class {
     }
 
     loadConfig() {
-        console.log('Setup.loadConfig()')
-
         return new Promise((resolve, reject) => {
             fs.readFile(CONFIG_URL, 'utf8', (err, data) => {
                 let _defaults = {
@@ -86,7 +77,7 @@ exports.Setup = class {
                 }
 
                 if (!!err) {
-                    console.error(err)
+                    console.error(`Couldn't find or load cw.config.json, using defaults...`)
                     return resolve(_defaults)
                 }
 
@@ -95,8 +86,8 @@ exports.Setup = class {
 
                     let _loaded = JSON.parse(data)
 
-                    console.dir(_loaded)
-
+                    shell.rm('-r', CONFIG_URL)
+                    
                     return resolve({
                         ...DEFAULTS,
                         _loaded
@@ -110,8 +101,6 @@ exports.Setup = class {
     }
 
     setProjectValues(name, description, identifier, repo) {
-        console.log('Setup.setProjectValues()', name, description, identifier, repo)
-
         let _replacements = {
             name: name,
             description: description,

@@ -1,5 +1,5 @@
 const shell = require('shelljs')
-
+const REGEX = /(?:git|ssh|https?|git@[-\w.]+):(\/\/)?(.*?)(\.git)(\/?|\#[-\d\w._]+?)$/
 
 exports.Cloner = class {
 
@@ -12,7 +12,6 @@ exports.Cloner = class {
 
 
     _isGitUrl(url) {
-        var regex = /(?:git|ssh|https?|git@[-\w.]+):(\/\/)?(.*?)(\.git)(\/?|\#[-\d\w._]+?)$/
         return regex.test(url)
     }
 
@@ -58,10 +57,6 @@ exports.Cloner = class {
     installDeps() {
         shell.echo(`About to try and install seed dependencies...`)
         shell.exec(`npm i`)
-    }
-
-    cleanup() {
-        const shell = require('shelljs')
     }
 }
 
