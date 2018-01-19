@@ -12,7 +12,7 @@ exports.Cloner = class {
 
 
     _isGitUrl(url) {
-        return regex.test(url)
+        return REGEX.test(url)
     }
 
 
