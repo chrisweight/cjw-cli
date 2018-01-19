@@ -19,7 +19,9 @@ let DEFAULTS = {
         './ionic.config.json',
         './package.json',
         './package-lock.json',
-        './src/index.html'
+        './src/index.html',
+        './README.md',
+        './CHANGELOG.md'
     ]
 }
 
@@ -72,13 +74,9 @@ exports.Setup = class {
     loadConfig() {
         return new Promise((resolve, reject) => {
             fs.readFile(CONFIG_URL, 'utf8', (err, data) => {
-                let _defaults = {
-                    ...DEFAULTS
-                }
-
                 if (!!err) {
                     console.error(`Couldn't find or load cw.config.json, using defaults...`)
-                    return resolve(_defaults)
+                    return resolve(DEFAULTS)
                 }
 
                 try {
@@ -88,13 +86,10 @@ exports.Setup = class {
 
                     shell.rm('-r', CONFIG_URL)
                     
-                    return resolve({
-                        ...DEFAULTS,
-                        _loaded
-                    })
+                    return resolve(_loaded)
                 } catch (error) {
                     console.error(error)
-                    return resolve(_defaults)
+                    return resolve(DEFAULTS)
                 }
             })
         })
