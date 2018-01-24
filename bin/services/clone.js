@@ -11,7 +11,7 @@ module.exports = class {
   }
 
 
-  _isGitUrl(url) {
+  isGitUrl(url) {
     return REGEX.test(url)
   }
 
@@ -20,7 +20,7 @@ module.exports = class {
     shell.pushd(`.`)
     shell.rm(`-rf`, directoryName)
 
-    if (!this._isGitUrl(repo)) {
+    if (!this.isGitUrl(repo)) {
       shell.echo(`Seed repo URL invalid, aborting!`)
       shell.exit(1)
     }
@@ -30,7 +30,6 @@ module.exports = class {
     shell.rm(`-rf`, `.git`)
 
     if (remoteUrl === undefined) {
-      shell.echo(`No new remote URL specified, finishing up here!`)
       return
     }
 
@@ -42,7 +41,7 @@ module.exports = class {
     shell.echo(`Re-initialising git...`)
     shell.exec(`git init`)
 
-    if (!this._isGitUrl(remoteUrl)) {
+    if (!this.isGitUrl(remoteUrl)) {
       shell.echo(`Remote URL appears to be invalid, you can add a valid remote later!`)
       shell.exit(1)
     }

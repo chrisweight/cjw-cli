@@ -15,7 +15,7 @@ const Arguments = {
 
 
 function execute(argv) {
-  if (!clone._isGitUrl(argv[Arguments.SEED])) {
+  if (!clone.isGitUrl(argv[Arguments.SEED])) {
     throw 'Invalid seed repo Url!'
     return
   }
@@ -55,7 +55,7 @@ function execute(argv) {
         message: 'Enter your project repo remote Url',
         default: 'git@github.com:chrisweight/new-project.git',
         when: answers => answers.hasRemote,
-        validate: value => cloner._isGitUrl(value)
+        validate: value => clone.isGitUrl(value)
           ? true
           : 'Please enter a valid Git URL'
       }]
