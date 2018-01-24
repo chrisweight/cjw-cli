@@ -61,12 +61,9 @@ module.exports = class {
         }
 
         // 5. Write changes back to the file
-        fs.writeFile(file, result, 'utf8', err => {
-          if (!!err) {
-            return reject(err)
-          }
-
-          return resolve(result)
+        fs.writeFile(file, result, 'utf8', err => !!err
+          ? reject(err)
+          : resolve(result)
         })
       })
     })

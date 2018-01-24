@@ -61,27 +61,23 @@ function execute(argv) {
       }]
     )
     .then(answers => {
-      // 1. Clone repo      
-      clone
-        .clone(
-          argv[Arguments.SEED],
-          answers[Arguments.NAME],
-          answers[Arguments.REMOTE]
-        )
+      // 1. Clone repo    
 
-      // 2. Setup project
+      const [seed, name, description, identifier, remote] = [
+        argv[Arguments.SEED],
+        answers[Arguments.NAME] || argv[Arguments.NAME],
+        answers[Arguments.DESCRIPTION] || argv[Arguments.DESCRIPTION],
+        answers[Arguments.IDENTIFIER] || argv[Arguments.IDENTIFIER],
+        answers[Arguments.REMOTE] || argv[Arguments.REMOTE] || undefined
+      ]
+
+      clone.clone(seed, name, remote)
+
+      // 2. Setup project, install dependencies
       setup
-        .setProjectValues(
-          answers[Arguments.NAME] || argv[Arguments.NAME],
-          answers[Arguments.DESCRIPTION] || argv[Arguments.DESCRIPTION],
-          answers[Arguments.IDENTIFIER] || argv[Arguments.IDENTIFIER],
-          answers[Arguments.REMOTE] || argv[Arguments.REMOTE] || null
-        )
-        
-      // 3. Install dependencies
-        .then(result => clone.installDeps())
-        .catch(error => console.error(error))
-
+      .setProjectValues(name, description, identifier, remote)
+      .then(result => clone.installNPMDependencies())
+      .catch(error => console.error(error))
     })
     .catch(error => console.error(error))
 }
