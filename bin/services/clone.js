@@ -31,7 +31,6 @@ module.exports = class {
 
     if (remoteUrl === undefined || !this.isGitUrl(remoteUrl)) {
       shell.echo(`Remote URL appears to be invalid, you can add a valid remote later!`)
-      shell.exit(1)
       return
     }
     

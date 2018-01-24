@@ -64,7 +64,7 @@ module.exports = class {
         fs.writeFile(file, result, 'utf8', err => !!err
           ? reject(err)
           : resolve(result)
-        })
+        )
       })
     })
   }
