@@ -1,6 +1,6 @@
 {
   "name": "@chrisweight/cjw-cli",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "PoC custom CLI tool used to generate projects from a template repo",
   "main": "bin/index.js",
   "scripts": {
