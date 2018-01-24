@@ -30,14 +30,14 @@ module.exports = class {
     shell.rm(`-rf`, `.git`)
 
     if (remoteUrl === undefined || !this.isGitUrl(remoteUrl)) {
-      shell.echo(`Remote URL appears to be invalid, you can add a valid remote later!`)
+      shell.echo(`Remote URL appears to be invalid or undefined, you can add a valid remote later!`)
       return
     }
     
-    shell.echo(`Re-initialising git...`)
+    shell.echo(`Valid remote detected, re-initialising git...`)
     shell.exec(`git init`)
    
-    shell.echo(`Valid new remote URL detected: ${remoteUrl} - adding...`)
+    shell.echo(`${remoteUrl} - adding as remote...`)
     shell.exec(`git remote add origin ${remoteUrl}`)
 
     shell.echo(`Done!`)

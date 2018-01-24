@@ -21,3 +21,4 @@ TODO
 ------
 - Better error-handling / retries
 - Expand `.cwrc` to allow for more types of information
+- Add extra validators for input arguments, i.e. app identifier
