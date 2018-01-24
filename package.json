@@ -1,0 +1,34 @@
+{
+  "name": "@chrisweight/cjw-cli",
+  "version": "0.1.6",
+  "description": "PoC custom CLI tool used to generate projects from a template repo",
+  "main": "bin/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/chrisweight/cjw-cli.git"
+  },
+  "keywords": [
+    "poc",
+    "cli",
+    "seed",
+    "generator"
+  ],
+  "author": "Chris Weight",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chrisweight/cjw-cli/issues"
+  },
+  "homepage": "https://github.com/chrisweight/cjw-cli#readme",
+  "bin": {
+    "cw": "bin/index.js"
+  },
+  "dependencies": {
+    "inquirer": "5.0.0",
+    "shelljs": "0.7.8",
+    "yargs": "10.0.3"
+  },
+  "devDependencies": {}
+}
